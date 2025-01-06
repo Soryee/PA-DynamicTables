@@ -57,3 +57,15 @@ With(
         }
     }
 )
+
+## Events
+
+### CreateLocalCollection
+- **Type:** Event
+- **Data Type:** Table
+- **Description:** Creates a local collection from the provided data.
+
+### OnSelect
+- **Type:** Output
+- **Data Type:** Record
+- **Description:** Captures the selected item from the gallery.
