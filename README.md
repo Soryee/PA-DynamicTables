@@ -75,7 +75,6 @@ The `CreateLocalCollection` function is designed to manage and manipulate data c
 - **JSON String Conversion:**
   - Converts `DataCollection` into a compact JSON string:
     ```javascript
-    Example Dataset:
         Table(
             { 
                 Id: 1,
@@ -102,7 +101,8 @@ The `CreateLocalCollection` function is designed to manage and manipulate data c
                 'Projects Completed': 7,
                 Salary: 65000,
                 Remote: true
-            },
+            }
+    );
     ```
     ```javascript
     Set(JsonString, JSON(DataCollection, JSONFormat.Compact)); 
