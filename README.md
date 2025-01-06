@@ -74,7 +74,8 @@ The `CreateLocalCollection` function is designed to manage and manipulate data c
 
 - **JSON String Conversion:**
   - Converts `DataCollection` into a compact JSON string:
-    ```Example Dataset:
+    ```javascript
+    Example Dataset:
         Table(
             { 
                 Id: 1,
