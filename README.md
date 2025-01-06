@@ -8,35 +8,23 @@ This Canvas PowerApp component is designed to efficiently render and interact wi
 - **Type:** Input Field
 - **Data Type:**
 ```javascript
-        Table(
-            { 
-                Id: 1,
-                Name: "John Doe",
-                Age: 30,
-                JoinDate: DateValue("2023-01-15"),
-                Score: 85.75,
-                Active: true,
-                Department: "IT",
-                Email: "john.doe@example.com",
-                'Projects Completed': 5,
-                Salary: 60000,
-                Remote: false
-            },
-            { 
-                Id: 2,
-                Name: "Jane Smith",
-                Age: 28,
-                JoinDate: DateValue("2022-08-10"),
-                Score: 92.5,
-                Active: false,
-                Department: "HR",
-                Email: "jane.smith@example.com",
-                'Projects Completed': 7,
-                Salary: 65000,
-                Remote: true
-            }
-    );
-    ```
+Table(
+    { 
+        Id: 1, Name: "John Doe", Age: 30,
+        JoinDate: DateValue("2023-01-15"),
+        Score: 85.75, Active: true, Department: "IT",
+        Email: "john.doe@example.com", 'Projects Completed': 5,
+        Salary: 60000, Remote: false
+    },
+    { 
+        Id: 2, Name: "Jane Smith", Age: 28,
+        JoinDate: DateValue("2022-08-10"),
+        Score: 92.5, Active: false, Department: "HR",
+        Email: "jane.smith@example.com", 'Projects Completed': 7,
+        Salary: 65000, Remote: true
+    }
+);
+```
 - **Description:** The datasource to be rendered within the component.
 
 ### UniqueColumnId
