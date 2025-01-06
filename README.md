@@ -7,7 +7,7 @@ This Canvas PowerApp component is designed to efficiently render and interact wi
 ### Core Data
 - **Type:** Input Field
 - **Data Type:** Table, see example below.
-```javascript
+```php
 Table(
     { 
         Id: 1, Name: "John Doe", Age: 30,
@@ -30,9 +30,10 @@ Table(
 ### UniqueColumnId
 - **Type:** Input Field
 - **Data Type:** String
-```javascript
-    Id
+```php
+"Id"
 ```
+
 - **Description:** Used to filter out the GUID column from the component to ensure it is not visible.
 
 ### VisualStyles
@@ -41,38 +42,34 @@ Table(
 - **Description:** A complex record dictating the visual theme of the component.  
 
 **Example Configuration:**
-```javascript
+```php
 With(
     {
-        PrimaryColor: RGBA(59, 89, 152, 1),
-        SecondaryColor: RGBA(139, 157, 195, 1),
-        AccentColor: RGBA(223, 249, 251, 1),
-        BackgroundColor: RGBA(236, 239, 241, 1),
-        Font: "Segoe UI",
-        FontSize: 12
-    },
+        BaseColor: RGBA(51, 51, 51, 1),
+        BaseBackgroundColor: RGBA(245, 245, 245, 1),
+        AltColor: RGBA(115, 115, 115, 1),
+        AltBackgroundColor: RGBA(255, 255, 255, 1),
+        Typeface: "Segoe UI", 
+        BaseFontSize: 12
+    }, 
     {
-        Colors: {
-            Primary: PrimaryColor,
-            Secondary: SecondaryColor,
-            Accent: AccentColor,
-            Background: BackgroundColor
-        },
         HeaderStyle: {
-            Font: Font,
-            FontColor: PrimaryColor,
-            FontSize: FontSize + 2,
-            BackgroundColor: BackgroundColor
+            Font: Typeface,
+            FontColor: BaseColor, 
+            FontSize: BaseFontSize + 2, 
+            BackgroundColor: BaseBackgroundColor
         },
         LineItemStyle: {
-            Font: Font,
-            FontColor: RGBA(67, 74, 84, 1),
-            FontSize: FontSize,
-            BackgroundColor: SecondaryColor,
-            BorderColor: AccentColor
+            Font: Typeface,
+            FontColor: BaseColor, 
+            AltFontColor: AltColor,
+            FontSize: BaseFontSize,
+            BackgroundColor: BaseBackgroundColor,
+            AltBackgroundColor: AltBackgroundColor
         }
     }
 )
+
 ```
 ## Events
 
@@ -87,21 +84,48 @@ The `CreateLocalCollection` function is designed to manage and manipulate data c
 
 - **Handling AppColumns:**
   - Checks if the `AppColumns` collection is empty, and if so, populates it with column names sorted by their position: 
-    ```javascript
+    ```less
     If(CountRows(AppColumns) = 0,
-        ClearCollect(AppColumns, SortByColumns(DragColumns.GetColumnNames(), "Position", SortOrder.Ascending))
+        ClearCollect(AppColumns, 
+            SortByColumns(DragColumns.GetColumnNames(), "Position", SortOrder.Ascending))
     );
+    ```
+      - ```DragColumns.GetColumnNames()``` is an internal function to provide the column names from the first row of the data source. See below.
+
+    ```less
+    With({
+        LocalData: ForAll(
+            Sequence(CountRows(Substitute(Substitute(MatchAll(JSON(First(DataCollection)), "(?<!\w):\s*([^{},]+).?").FullMatch, ":", Blank()), Char(34), Blank()))),
+            {
+                Value: Index(Substitute(Substitute(MatchAll(JSON(First(DataCollection)), ".(\s*\w+(?:\s+\w+)*)\s*.:").FullMatch, ":", Blank()), Char(34), Blank()), Value).Value,
+                Position: Value,
+                Id: Value, 
+                GUID: If(Index(Substitute(Substitute(MatchAll(JSON(First(DataCollection)), ".(\s*\w+(?:\s+\w+)*)\s*.:").FullMatch, ":", Blank()), Char(34), Blank()), Value).Value = DragColumns.UniqueColumnId, true, false)
+            }
+        )}, 
+        With({GUIDPosition: LookUp(LocalData, GUID)}, 
+            ForAll(LocalData As Data,
+                If(Data.Position > GUIDPosition.Position, 
+                    {Value: Data.Value, Position: Data.Position-1, Id: Data.Id, GUID: Data.GUID}, 
+                    If(Data.GUID, 
+                        {Value: Data.Value, Position: -1, Id: Data.Id, GUID: Data.GUID}, 
+                        {Value: Data.Value, Position: Data.Position, Id: Data.Id, GUID: Data.GUID}
+                    )
+                )
+            )
+        )
+    )
     ```
 
 - **JSON String Conversion:**
   - Converts `DataCollection` into a compact JSON string:
-    ```javascript
+    ```less
     Set(JsonString, JSON(DataCollection, JSONFormat.Compact)); 
     ```
 
 - **TableBuilder Collection:**
   - Clears the existing `TableBuilder` and processes each JSON object:
-    ```javascript
+    ```less
     Clear(TableBuilder);
 
     ForAll(MatchAll(JsonString, "{([^{}]+)}"),
@@ -114,7 +138,7 @@ The `CreateLocalCollection` function is designed to manage and manipulate data c
 
 - **Record Parsing and Sorting:**
   - Processes each parsed JSON record to extract and sort key names and values based on their positions:
-    ```javascript
+    ```less
     ClearCollect(TableData,
         ForAll(TableBuilder,
         SortByColumns(
