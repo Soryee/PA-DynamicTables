@@ -60,6 +60,57 @@ With(
 - **Data Type:** Table
 - **Description:** Creates a local collection from the provided data.
 
+## CreateLocalCollection Event/Function
+
+The `CreateLocalCollection` function is designed to manage and manipulate data collections within the component. It initializes and organizes data for subsequent use and interaction.
+
+### Function Details
+
+- **Initialization:**
+  - Resets the `SelectedItem` to an empty object: `Set(SelectedItem, {});`
+
+- **Handling AppColumns:**
+  - Checks if the `AppColumns` collection is empty, and if so, populates it with column names sorted by their position: 
+    ```javascript
+    If(CountRows(AppColumns) = 0,
+        ClearCollect(AppColumns, SortByColumns(DragColumns.GetColumnNames(), "Position", SortOrder.Ascending))
+    );
+    ```
+
+- **JSON String Conversion:**
+  - Converts `DataCollection` into a compact JSON string:
+    ```javascript
+    Set(JsonString, JSON(DataCollection, JSONFormat.Compact)); 
+    ```
+
+- **TableBuilder Collection:**
+  - Clears the existing `TableBuilder` and processes each JSON object:
+    ```javascript
+    Clear(TableBuilder);
+
+    ForAll(MatchAll(JsonString, "{([^{}]+)}"),
+        Collect(TableBuilder, {
+            FullObject: FullMatch,
+            KeyValues: MatchAll(FullMatch, ".(\w+).\s*:\s*([^,{}]+).")
+        })
+    );
+    ```
+
+- **Record Parsing and Sorting:**
+  - Processes each parsed JSON record to extract and sort key names and values based on their positions:
+    ```javascript
+    {
+        Name: First(Split(ThisRecord.Value, ":")).Value,
+        Value: Last(Split(ThisRecord.Value, ":")).Value,
+        Position: LookUp(AppColumns As Columns, Columns.Value = First(Split(ThisRecord.Value, ":")).Value).Position
+    }
+    SortOrder: SortOrder.Ascending
+    ```
+
+This function ensures that data is structured and readily available for rendering and interactions within the PowerApp component.
+
+
+
 ### OnSelect
 - **Type:** Output
 - **Data Type:** Record
