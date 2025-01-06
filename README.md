@@ -30,6 +30,9 @@ Table(
 ### UniqueColumnId
 - **Type:** Input Field
 - **Data Type:** String
+```javascript
+    Id
+```
 - **Description:** Used to filter out the GUID column from the component to ensure it is not visible.
 
 ### VisualStyles
