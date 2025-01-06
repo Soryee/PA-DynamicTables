@@ -55,12 +55,7 @@ With(
 ```
 ## Events
 
-### CreateLocalCollection
-- **Type:** Event
-- **Data Type:** Table
-- **Description:** Creates a local collection from the provided data.
-
-## CreateLocalCollection Event/Function
+## CreateLocalCollection Event
 
 The `CreateLocalCollection` function is designed to manage and manipulate data collections within the component. It initializes and organizes data for subsequent use and interaction.
 
