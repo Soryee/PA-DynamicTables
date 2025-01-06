@@ -6,7 +6,7 @@ This Canvas PowerApp component is designed to efficiently render and interact wi
 
 ### Core Data
 - **Type:** Input Field
-- **Data Type:**
+- **Data Type:** Table, see example below.
 ```javascript
 Table(
     { 
