@@ -9,11 +9,6 @@ This Canvas PowerApp component is designed to efficiently render and interact wi
 - **Data Type:** Table
 - **Description:** The datasource to be rendered within the component.
 
-### RowOrCell
-- **Type:** Input Field
-- **Data Type:** Boolean
-- **Description:** Determines whether individual cells within the gallery can be selected.
-
 ### UniqueColumnId
 - **Type:** Input Field
 - **Data Type:** String
