@@ -99,12 +99,16 @@ The `CreateLocalCollection` function is designed to manage and manipulate data c
 - **Record Parsing and Sorting:**
   - Processes each parsed JSON record to extract and sort key names and values based on their positions:
     ```javascript
-    {
-        Name: First(Split(ThisRecord.Value, ":")).Value,
-        Value: Last(Split(ThisRecord.Value, ":")).Value,
-        Position: LookUp(AppColumns As Columns, Columns.Value = First(Split(ThisRecord.Value, ":")).Value).Position
-    }
-    SortOrder: SortOrder.Ascending
+ClearCollect(TableData,
+ForAll(TableBuilder,
+        SortByColumns(
+        ForAll(Substitute(Substitute(Substitute(ThisRecord.KeyValues.FullMatch, "}", ""), ",", ""), Char(34), ""), 
+            {
+                Name: First(Split(ThisRecord.Value, ":")).Value,
+                Value: Last(Split(ThisRecord.Value, ":")).Value, 
+                Position: LookUp(AppColumns As Columns, Columns.Value = First(Split(ThisRecord.Value, ":")).Value).Position
+            }
+        ), "Position", SortOrder.Ascending)));
     ```
 
 This function ensures that data is structured and readily available for rendering and interactions within the PowerApp component.
