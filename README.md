@@ -3,7 +3,7 @@
 This Canvas PowerApp component is designed to efficiently render and interact with data from an unspecified datasource. 
 
 ## How it works
-```
+```powershell
 With({Items:
     Sort(
         Filter(ForAll(ForAll(Split(Substitute(Substitute(JSON(_c.Data),"[{",""),"}]",""),"},{"),
@@ -30,16 +30,15 @@ With({Items:
     ForAll(Sequence(CountRows(Items)),Patch(Last(FirstN(Items,Value)),{rowNumber:Value})))
 ```
 
-Step by step: 
+## Step-by-Step Instructions
 
-1. Assume that we're working with a JSON table [{}].
-2. Remove the [] and split on new row },{ in order to create a PowerFX table
-   -
-   - Substitute(String, $Placeholder, "")
-3. Loop through and clean up any remaining unwanted strings via replace
-4. Create a nested table that contains each row's column name and column value with a randomized GUID 
+1. Assume that we're working with a JSON array of objects `[{}]`.
+2. Remove the square brackets `[]` and split the string on `},{` to create a PowerFX table.
+   - Use `Substitute(String, $Placeholder, "")` to replace placeholders.
+3. Loop through and clean up any remaining unwanted strings using the `Replace` function.
+4. Create a nested table that contains each object's property name and value, along with a randomized GUID.
 
-```
+```powershell
 ForAll(Split(Substitute(Substitute(JSON(_c.Data),"[{",""),"}]",""),"},{"),
     With({ThisRecord:ThisRecord, ID:GUID()},
         ForAll(Split(Substitute(Value,Char(34),""),","), {
